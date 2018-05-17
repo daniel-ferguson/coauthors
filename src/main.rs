@@ -7,17 +7,68 @@ extern crate lazy_static;
 extern crate regex;
 
 mod author;
+mod cli;
 mod patch_format;
 
+use std::convert::TryFrom;
+use std::error::Error;
+
 use author::Author;
+use patch_format::PatchFormat;
+
+fn ls() -> Result<(), Box<Error>> {
+    let config = git2::Config::open_default()?;
+
+    println!("Available authors:\n");
+    for entry in &config.entries(Some("pair.user"))? {
+        let entry = entry?;
+        if let Some(value) = entry.value() {
+            let author = Author::try_from(value)?;
+
+            println!("* {}", author.format());
+        }
+    }
+
+    println!("\n\nActive authors:\n");
+    for entry in &config.entries(Some("pair.active"))? {
+        let entry = entry?;
+        if let Some(value) = entry.value() {
+            let author = Author::try_from(value)?;
+
+            println!("* {}", author.format());
+        }
+    }
+    Ok(())
+}
+
+fn print() -> Result<(), Box<Error>> {
+    let config = git2::Config::open_default()?;
+
+    for entry in &config.entries(Some("pair.active"))? {
+        let entry = entry?;
+        if let Some(value) = entry.value() {
+            let author = Author::try_from(value)?;
+
+            println!("Co-authored-by: {}", author.format());
+        }
+    }
+    Ok(())
+}
 
 fn main() {
-    use patch_format::PatchFormat;
-    let author = Author {
-        alias: "doggo".into(),
-        name: "Good Doggo".into(),
-        email: "doggo113@gmail.com".into(),
+    let matches = cli::app().get_matches();
+
+    let result = match matches.subcommand() {
+        ("ls", Some(_)) => ls(),
+        ("print", Some(_)) => print(),
+        _ => {
+            println!("{}", matches.usage());
+            Ok(())
+        }
     };
 
-    println!("{}", author.format());
+    if let Err(e) = result {
+        eprintln!("{}", e);
+        std::process::exit(1);
+    }
 }
