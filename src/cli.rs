@@ -4,6 +4,8 @@ pub fn app<'a, 'b>() -> App<'a, 'b> {
     let ls = SubCommand::with_name("ls").about("Prints available and active co-authors");
     let print = SubCommand::with_name("print")
         .about("Format active co-authors for adding to a commit message");
+    let reset = SubCommand::with_name("reset")
+        .about("Remove active co-authors");
 
     App::new("coauthors")
         .version("0.1")
@@ -11,4 +13,5 @@ pub fn app<'a, 'b>() -> App<'a, 'b> {
         .about("A git wrapper for pairing")
         .subcommand(ls)
         .subcommand(print)
+        .subcommand(reset)
 }

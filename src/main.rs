@@ -55,12 +55,21 @@ fn print() -> Result<(), Box<Error>> {
     Ok(())
 }
 
+fn reset() -> Result<(), Box<Error>> {
+    let mut config = git2::Config::open_default()?;
+
+    config.remove_multivar("pair.active", "")?;
+
+    Ok(())
+}
+
 fn main() {
     let matches = cli::app().get_matches();
 
     let result = match matches.subcommand() {
         ("ls", Some(_)) => ls(),
         ("print", Some(_)) => print(),
+        ("reset", Some(_)) => reset(),
         _ => {
             println!("{}", matches.usage());
             Ok(())
