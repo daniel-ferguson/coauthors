@@ -9,6 +9,15 @@ extern crate regex;
 mod author;
 mod patch_format;
 
+use author::Author;
+
 fn main() {
-    println!("Hello, world!");
+    use patch_format::PatchFormat;
+    let author = Author {
+        alias: "doggo".into(),
+        name: "Good Doggo".into(),
+        email: "doggo113@gmail.com".into(),
+    };
+
+    println!("{}", author.format());
 }
