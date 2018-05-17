@@ -1,4 +1,6 @@
 use std::convert::TryFrom;
+use std::error;
+use std::fmt;
 
 use regex::Regex;
 
@@ -13,6 +15,14 @@ pub struct Author {
 
 #[derive(Debug, PartialEq)]
 pub struct ParseError;
+
+impl fmt::Display for ParseError {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        write!(fmt, "Parse Error")
+    }
+}
+
+impl error::Error for ParseError {}
 
 impl<'a> TryFrom<&'a str> for Author {
     type Error = ParseError;
