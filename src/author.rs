@@ -56,6 +56,12 @@ impl GitConfigFormat for Author {
     }
 }
 
+impl fmt::Display for Author {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        write!(fmt, "[{}] {} <{}>", self.alias, self.name, self.email)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::TryFrom;

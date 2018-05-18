@@ -33,8 +33,6 @@ fn add(args: &clap::ArgMatches) -> Result<(), Box<Error>> {
 }
 
 fn ls() -> Result<(), Box<Error>> {
-    use patch_format::PatchFormat;
-
     let config = git2::Config::open_default()?;
 
     println!("Available authors:\n");
@@ -43,7 +41,7 @@ fn ls() -> Result<(), Box<Error>> {
         if let Some(value) = entry.value() {
             let author = Author::try_from(value)?;
 
-            println!("* {}", author.format());
+            println!("* {}", author);
         }
     }
 
@@ -53,7 +51,7 @@ fn ls() -> Result<(), Box<Error>> {
         if let Some(value) = entry.value() {
             let author = Author::try_from(value)?;
 
-            println!("* {}", author.format());
+            println!("* {}", author);
         }
     }
     Ok(())
