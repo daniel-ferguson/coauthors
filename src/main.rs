@@ -83,6 +83,42 @@ fn reset() -> Result<(), Box<Error>> {
     Ok(())
 }
 
+fn set(args: &clap::ArgMatches) -> Result<(), Box<Error>> {
+    use git_config_format::GitConfigFormat;
+    let mut config = git2::Config::open_default()?;
+
+    let mut authors = Vec::new();
+    {
+        let entries = config.entries(Some("pair.user"))?;
+
+        for entry in &entries {
+            let entry = entry?;
+            if let Some(value) = entry.value() {
+                let author = Author::try_from(value)?;
+                authors.push(author);
+            }
+        }
+    }
+
+    let aliases: Vec<&str> = args.values_of("ALIASES").unwrap().collect();
+    let authors: Vec<Author> = authors
+        .into_iter()
+        .filter(|a| aliases.contains(&a.alias.as_ref()))
+        .collect();
+
+    if authors.len() > 0 {
+        // Ignore failures here - a common case is when pair.active hasn't
+        // yet been set
+        let _ = config.remove_multivar("pair.active", ".*");
+
+        for author in authors {
+            config.set_multivar("pair.active", "^$", &author.format())?;
+        }
+    }
+
+    Ok(())
+}
+
 fn main() {
     let matches = cli::app().get_matches();
 
@@ -91,6 +127,7 @@ fn main() {
         ("ls", Some(_)) => ls(),
         ("print", Some(_)) => print(),
         ("reset", Some(_)) => reset(),
+        ("set", Some(args)) => set(args),
         _ => {
             println!("{}", matches.usage());
             Ok(())

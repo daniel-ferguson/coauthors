@@ -10,6 +10,9 @@ pub fn app<'a, 'b>() -> App<'a, 'b> {
     let print = SubCommand::with_name("print")
         .about("Format active co-authors for adding to a commit message");
     let reset = SubCommand::with_name("reset").about("Remove active co-authors");
+    let set = SubCommand::with_name("set")
+        .about("Set active co-authors")
+        .arg(Arg::with_name("ALIASES").required(true).multiple(true));
 
     App::new("coauthors")
         .version("0.1")
@@ -19,4 +22,5 @@ pub fn app<'a, 'b>() -> App<'a, 'b> {
         .subcommand(ls)
         .subcommand(print)
         .subcommand(reset)
+        .subcommand(set)
 }
