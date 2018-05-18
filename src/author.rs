@@ -4,6 +4,7 @@ use std::fmt;
 
 use regex::Regex;
 
+use git_config_format::GitConfigFormat;
 use patch_format::PatchFormat;
 
 #[derive(Debug, PartialEq)]
@@ -46,6 +47,12 @@ impl<'a> TryFrom<&'a str> for Author {
 impl PatchFormat for Author {
     fn format(&self) -> String {
         format!("{} <{}>", self.name, self.email)
+    }
+}
+
+impl GitConfigFormat for Author {
+    fn format(&self) -> String {
+        format!("{} | {} | {}", self.alias, self.name, self.email)
     }
 }
 
