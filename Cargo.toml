@@ -5,6 +5,6 @@ authors = ["Daniel Ferguson <danielferguson@me.com>"]
 
 [dependencies]
 clap = "2.31.0"
-git2 = { git = "https://github.com/daniel-ferguson/git2-rs", rev = "9bc0eeb64f3ea0d64a0c168e40d58386ed6d4302" }
+git2 = { git = "https://github.com/alexcrichton/git2-rs", rev = "master" }
 lazy_static = "1.0.0"
 regex = "1.0.0"
