@@ -76,7 +76,7 @@ fn print() -> Result<(), Box<Error>> {
 fn reset() -> Result<(), Box<Error>> {
     let mut config = git2::Config::open_default()?;
 
-    let _ = config.remove_multivar("pair.active", "");
+    let _ = config.remove_multivar("pair.active", ".*");
 
     Ok(())
 }
