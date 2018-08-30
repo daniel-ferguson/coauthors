@@ -27,7 +27,7 @@ fn add(args: &clap::ArgMatches) -> Result<(), Box<Error>> {
 
     let mut config = git2::Config::open_default()?.open_level(git2::ConfigLevel::Global)?;
 
-    config.set_multivar("pair.user", "^$", &author.format())?;
+    config.set_multivar("pair.author", "^$", &author.format())?;
 
     Ok(())
 }
@@ -36,7 +36,7 @@ fn ls() -> Result<(), Box<Error>> {
     let config = git2::Config::open_default()?;
 
     println!("Available authors:\n");
-    for entry in &config.entries(Some("pair.user"))? {
+    for entry in &config.entries(Some("pair.author"))? {
         let entry = entry?;
         if let Some(value) = entry.value() {
             let author = Author::try_from(value)?;
@@ -87,7 +87,7 @@ fn set(args: &clap::ArgMatches) -> Result<(), Box<Error>> {
 
     let mut authors = Vec::new();
     {
-        let entries = config.entries(Some("pair.user"))?;
+        let entries = config.entries(Some("pair.author"))?;
 
         for entry in &entries {
             let entry = entry?;
