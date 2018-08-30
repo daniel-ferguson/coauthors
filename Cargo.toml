@@ -3,6 +3,10 @@ name = "coauthors"
 version = "0.1.0"
 authors = ["Daniel Ferguson <danielferguson@me.com>"]
 
+[[bin]]
+name = "git-coauthors"
+path = "src/main.rs"
+
 [dependencies]
 clap = "2.31.0"
 git2 = { git = "https://github.com/alexcrichton/git2-rs", rev = "master" }
