@@ -1,6 +1,6 @@
-use std::convert::TryFrom;
 use std::error;
 use std::fmt;
+use std::str::FromStr;
 
 use regex::Regex;
 
@@ -25,10 +25,10 @@ impl fmt::Display for ParseError {
 
 impl error::Error for ParseError {}
 
-impl<'a> TryFrom<&'a str> for Author {
-    type Error = ParseError;
+impl<'a> FromStr for Author {
+    type Err = ParseError;
 
-    fn try_from(value: &str) -> Result<Author, Self::Error> {
+    fn from_str(value: &str) -> Result<Author, Self::Err> {
         lazy_static! {
             static ref RE: Regex = Regex::new(r"^(\S+)\s*\|\s*(.+?)\s*\|\s*(\S+)\s*$").unwrap();
         }
@@ -64,8 +64,6 @@ impl fmt::Display for Author {
 
 #[cfg(test)]
 mod tests {
-    use super::TryFrom;
-
     use super::Author;
     use super::ParseError;
     use super::PatchFormat;
@@ -87,27 +85,27 @@ mod tests {
     #[test]
     fn test_parse_alias() {
         let line = "doggo | Really Good Doggo | doggo113@email.co.uk";
-        let author = Author::try_from(line).unwrap();
+        let author: Author = line.parse().unwrap();
         assert_eq!(author.alias, "doggo");
     }
 
     #[test]
     fn test_parse_name() {
         let line = "doggo | Really Good Doggo | doggo113@email.co.uk";
-        let author = Author::try_from(line).unwrap();
+        let author: Author = line.parse().unwrap();
         assert_eq!(author.name, "Really Good Doggo");
     }
 
     #[test]
     fn test_parse_email() {
         let line = "doggo | Really Good Doggo | doggo113@email.co.uk";
-        let author = Author::try_from(line).unwrap();
+        let author: Author = line.parse().unwrap();
         assert_eq!(author.email, "doggo113@email.co.uk");
     }
 
     #[test]
     fn test_parse_unexpected_format() {
         let line = "doggo | ";
-        assert_eq!(Author::try_from(line), Err(ParseError));
+        assert_eq!(line.parse::<Author>(), Err(ParseError));
     }
 }

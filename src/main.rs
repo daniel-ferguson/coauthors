@@ -1,5 +1,3 @@
-#![feature(try_from)]
-
 extern crate clap;
 extern crate git2;
 #[macro_use]
@@ -11,7 +9,6 @@ mod cli;
 mod git_config_format;
 mod patch_format;
 
-use std::convert::TryFrom;
 use std::error::Error;
 
 use author::Author;
@@ -39,7 +36,7 @@ fn ls() -> Result<(), Box<Error>> {
     for entry in &config.entries(Some("pair.author"))? {
         let entry = entry?;
         if let Some(value) = entry.value() {
-            let author = Author::try_from(value)?;
+            let author: Author = value.parse()?;
 
             println!("* {}", author);
         }
@@ -49,7 +46,7 @@ fn ls() -> Result<(), Box<Error>> {
     for entry in &config.entries(Some("pair.active"))? {
         let entry = entry?;
         if let Some(value) = entry.value() {
-            let author = Author::try_from(value)?;
+            let author: Author = value.parse()?;
 
             println!("* {}", author);
         }
@@ -65,7 +62,7 @@ fn print() -> Result<(), Box<Error>> {
     for entry in &config.entries(Some("pair.active"))? {
         let entry = entry?;
         if let Some(value) = entry.value() {
-            let author = Author::try_from(value)?;
+            let author: Author = value.parse()?;
 
             println!("Co-authored-by: {}", author.format());
         }
@@ -92,7 +89,7 @@ fn set(args: &clap::ArgMatches) -> Result<(), Box<Error>> {
         for entry in &entries {
             let entry = entry?;
             if let Some(value) = entry.value() {
-                let author = Author::try_from(value)?;
+                let author: Author = value.parse()?;
                 authors.push(author);
             }
         }
