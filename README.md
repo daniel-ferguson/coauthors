@@ -44,7 +44,7 @@ Tell git to use the commit template (globally)
 
 Add the prepare-commit-msg hook to your local git repo
 
-    cp git-hook/prepare-commit-message ~/projects/your-repo/.git
+    cp git-hook/prepare-commit-message ~/projects/your-repo/.git/hooks
 
 
 ## CLI Usage
