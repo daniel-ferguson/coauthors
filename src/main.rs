@@ -24,7 +24,7 @@ fn add(args: &clap::ArgMatches) -> Result<(), Box<Error>> {
 
     let mut config = git2::Config::open_default()?.open_level(git2::ConfigLevel::Global)?;
 
-    config.set_multivar("pair.author", "^$", &author.format())?;
+    config.set_multivar("pear.author", "^$", &author.format())?;
 
     Ok(())
 }
@@ -33,17 +33,16 @@ fn ls() -> Result<(), Box<Error>> {
     let config = git2::Config::open_default()?;
 
     println!("Available authors:\n");
-    for entry in &config.entries(Some("pair.author"))? {
+    for entry in &config.entries(Some("pear.author"))? {
         let entry = entry?;
         if let Some(value) = entry.value() {
             let author: Author = value.parse()?;
-
             println!("* {}", author);
         }
     }
 
     println!("\n\nActive authors:\n");
-    for entry in &config.entries(Some("pair.active"))? {
+    for entry in &config.entries(Some("pear.active"))? {
         let entry = entry?;
         if let Some(value) = entry.value() {
             let author: Author = value.parse()?;
@@ -59,7 +58,7 @@ fn print() -> Result<(), Box<Error>> {
 
     let config = git2::Config::open_default()?;
 
-    for entry in &config.entries(Some("pair.active"))? {
+    for entry in &config.entries(Some("pear.active"))? {
         let entry = entry?;
         if let Some(value) = entry.value() {
             let author: Author = value.parse()?;
@@ -73,7 +72,7 @@ fn print() -> Result<(), Box<Error>> {
 fn reset() -> Result<(), Box<Error>> {
     let mut config = git2::Config::open_default()?;
 
-    let _ = config.remove_multivar("pair.active", ".*");
+    let _ = config.remove_multivar("pear.active", ".*");
 
     Ok(())
 }
@@ -84,7 +83,7 @@ fn set(args: &clap::ArgMatches) -> Result<(), Box<Error>> {
 
     let mut authors = Vec::new();
     {
-        let entries = config.entries(Some("pair.author"))?;
+        let entries = config.entries(Some("pear.author"))?;
 
         for entry in &entries {
             let entry = entry?;
@@ -102,12 +101,12 @@ fn set(args: &clap::ArgMatches) -> Result<(), Box<Error>> {
         .collect();
 
     if authors.len() > 0 {
-        // Ignore failures here - a common case is when pair.active hasn't
+        // Ignore failures here - a common case is when pear.active hasn't
         // yet been set
-        let _ = config.remove_multivar("pair.active", ".*");
+        let _ = config.remove_multivar("pear.active", ".*");
 
         for author in authors {
-            config.set_multivar("pair.active", "^$", &author.format())?;
+            config.set_multivar("pear.active", "^$", &author.format())?;
         }
     }
 
