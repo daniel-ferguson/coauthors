@@ -7,8 +7,6 @@ extern crate tempfile;
 
 mod author;
 mod cli;
-mod git_config_format;
-mod patch_format;
 mod store;
 
 use std::error::Error;
@@ -46,11 +44,10 @@ fn ls() -> Result<(), Box<Error>> {
 }
 
 fn print() -> Result<(), Box<Error>> {
-    use patch_format::PatchFormat;
     let store = store::GitConfig::new()?;
 
     for author in store.active()? {
-        println!("Co-authored-by: {}", author.format());
+        println!("Co-authored-by: {} <{}>", author.name, author.email);
     }
 
     Ok(())

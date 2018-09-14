@@ -4,9 +4,6 @@ use std::str::FromStr;
 
 use regex::Regex;
 
-use git_config_format::GitConfigFormat;
-use patch_format::PatchFormat;
-
 #[derive(Debug, PartialEq)]
 pub struct Author {
     pub alias: String,
@@ -44,18 +41,6 @@ impl<'a> FromStr for Author {
     }
 }
 
-impl PatchFormat for Author {
-    fn format(&self) -> String {
-        format!("{} <{}>", self.name, self.email)
-    }
-}
-
-impl GitConfigFormat for Author {
-    fn format(&self) -> String {
-        format!("{} | {} | {}", self.alias, self.name, self.email)
-    }
-}
-
 impl fmt::Display for Author {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         write!(fmt, "[{}] {} <{}>", self.alias, self.name, self.email)
@@ -66,21 +51,6 @@ impl fmt::Display for Author {
 mod tests {
     use super::Author;
     use super::ParseError;
-    use super::PatchFormat;
-
-    #[test]
-    fn test_format_for_patch() {
-        let author = Author {
-            alias: "doggo".into(),
-            name: "Really Good Doggo".into(),
-            email: "doggo113@email.com".into(),
-        };
-
-        assert_eq!(
-            &author.format()[..],
-            "Really Good Doggo <doggo113@email.com>"
-        );
-    }
 
     #[test]
     fn test_parse_alias() {
