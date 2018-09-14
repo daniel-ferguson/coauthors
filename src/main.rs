@@ -3,6 +3,7 @@ extern crate git2;
 #[macro_use]
 extern crate lazy_static;
 extern crate regex;
+extern crate tempfile;
 
 mod author;
 mod cli;
