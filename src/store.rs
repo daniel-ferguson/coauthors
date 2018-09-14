@@ -14,11 +14,14 @@ pub trait Store {
     fn set(&mut self, authors: &[Author]) -> StoreResult<()>;
 }
 
-pub struct GitConfig {}
+pub struct GitConfig {
+    config: git2::Config,
+}
 
 impl GitConfig {
-    pub fn new() -> Self {
-        GitConfig {}
+    pub fn new() -> StoreResult<Self> {
+        let config = git2::Config::open_default()?;
+        Ok(GitConfig { config })
     }
 }
 

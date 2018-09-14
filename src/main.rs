@@ -23,7 +23,7 @@ fn add(args: &clap::ArgMatches) -> Result<(), Box<Error>> {
         email: args.value_of("EMAIL").unwrap().into(),
     };
 
-    let mut store = store::GitConfig::new();
+    let mut store = store::GitConfig::new()?;
 
     store.add(&author)?;
 
@@ -31,7 +31,7 @@ fn add(args: &clap::ArgMatches) -> Result<(), Box<Error>> {
 }
 
 fn ls() -> Result<(), Box<Error>> {
-    let store = store::GitConfig::new();
+    let store = store::GitConfig::new()?;
 
     println!("Available authors:\n");
     for author in store.authors()? {
@@ -47,7 +47,7 @@ fn ls() -> Result<(), Box<Error>> {
 
 fn print() -> Result<(), Box<Error>> {
     use patch_format::PatchFormat;
-    let store = store::GitConfig::new();
+    let store = store::GitConfig::new()?;
 
     for author in store.active()? {
         println!("Co-authored-by: {}", author.format());
@@ -57,11 +57,11 @@ fn print() -> Result<(), Box<Error>> {
 }
 
 fn reset() -> Result<(), Box<Error>> {
-    store::GitConfig::new().clear()
+    store::GitConfig::new()?.clear()
 }
 
 fn set(args: &clap::ArgMatches) -> Result<(), Box<Error>> {
-    let mut store = store::GitConfig::new();
+    let mut store = store::GitConfig::new()?;
 
     let aliases: Vec<&str> = args.values_of("ALIASES").unwrap().collect();
     let authors: Vec<Author> = store
