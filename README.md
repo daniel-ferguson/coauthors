@@ -3,6 +3,11 @@
 A (ridiculously overengineered) git subcommand for managing co-authored-by
 commit trailer for pairing. It may eat your git config
 
+**WARNING - incomplete and subject to regular breaking changes**
+
+*Everything will probably break/change as I get a better understanding of what
+a good workflow around applying Co-authored-by trailers looks like.*
+
 ## Requirements
 
 * A recent version of rustc and cargo (tested on 1.28.0 stable)
