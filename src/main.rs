@@ -14,7 +14,7 @@ use std::error::Error;
 use author::Author;
 use store::Store;
 
-fn add(args: &clap::ArgMatches) -> Result<(), Box<Error>> {
+fn add(args: &clap::ArgMatches) -> Result<(), Box<dyn Error>> {
     let author = Author {
         alias: args.value_of("ALIAS").unwrap().into(),
         name: args.value_of("NAME").unwrap().into(),
@@ -28,7 +28,7 @@ fn add(args: &clap::ArgMatches) -> Result<(), Box<Error>> {
     Ok(())
 }
 
-fn ls() -> Result<(), Box<Error>> {
+fn ls() -> Result<(), Box<dyn Error>> {
     let store = store::GitConfig::new()?;
 
     println!("Available authors:\n");
@@ -43,7 +43,7 @@ fn ls() -> Result<(), Box<Error>> {
     Ok(())
 }
 
-fn print() -> Result<(), Box<Error>> {
+fn print() -> Result<(), Box<dyn Error>> {
     let store = store::GitConfig::new()?;
 
     for author in store.active()? {
@@ -53,11 +53,11 @@ fn print() -> Result<(), Box<Error>> {
     Ok(())
 }
 
-fn reset() -> Result<(), Box<Error>> {
+fn reset() -> Result<(), Box<dyn Error>> {
     store::GitConfig::new()?.clear()
 }
 
-fn set(args: &clap::ArgMatches) -> Result<(), Box<Error>> {
+fn set(args: &clap::ArgMatches) -> Result<(), Box<dyn Error>> {
     let mut store = store::GitConfig::new()?;
 
     let aliases: Vec<&str> = args.values_of("ALIASES").unwrap().collect();

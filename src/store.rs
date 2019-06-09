@@ -6,7 +6,7 @@ use std::path::Path;
 
 use author::Author;
 
-type StoreResult<T> = Result<T, Box<Error>>;
+type StoreResult<T> = Result<T, Box<dyn Error>>;
 
 pub trait Store {
     fn add(&mut self, author: &Author) -> StoreResult<()>;
