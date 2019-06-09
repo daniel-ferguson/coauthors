@@ -11,7 +11,7 @@ path = "src/main.rs"
 
 [dependencies]
 clap = "2.31.0"
-git2 = { git = "https://github.com/alexcrichton/git2-rs", rev = "master" }
+git2 = "0.9"
 lazy_static = "1.0.0"
 regex = "1.0.0"
 tempfile = "3.0.3"

@@ -109,7 +109,6 @@ mod tests {
     #[test]
     fn authors() {
         let mut file = NamedTempFile::new().unwrap();
-        let store = GitConfig::with_config_path(file.path()).unwrap();
 
         write!(
             file,
@@ -119,6 +118,8 @@ mod tests {
         "#
         )
         .unwrap();
+
+        let store = GitConfig::with_config_path(file.path()).unwrap();
 
         assert_eq!(
             store.authors().unwrap(),
@@ -140,7 +141,6 @@ mod tests {
     #[test]
     fn authors_no_overeager_matching() {
         let mut file = NamedTempFile::new().unwrap();
-        let store = GitConfig::with_config_path(file.path()).unwrap();
 
         write!(
             file,
@@ -154,6 +154,8 @@ mod tests {
         "#
         )
         .unwrap();
+
+        let store = GitConfig::with_config_path(file.path()).unwrap();
 
         assert_eq!(
             store.authors().unwrap(),
@@ -175,7 +177,6 @@ mod tests {
     #[test]
     fn active() {
         let mut file = NamedTempFile::new().unwrap();
-        let store = GitConfig::with_config_path(file.path()).unwrap();
 
         write!(
             file,
@@ -185,6 +186,8 @@ mod tests {
         "#
         )
         .unwrap();
+
+        let store = GitConfig::with_config_path(file.path()).unwrap();
 
         assert_eq!(
             store.active().unwrap(),
@@ -199,7 +202,6 @@ mod tests {
     #[test]
     fn active_no_overeager_matching() {
         let mut file = NamedTempFile::new().unwrap();
-        let store = GitConfig::with_config_path(file.path()).unwrap();
 
         write!(
             file,
@@ -211,6 +213,8 @@ mod tests {
         "#
         )
         .unwrap();
+
+        let store = GitConfig::with_config_path(file.path()).unwrap();
 
         assert_eq!(
             store.active().unwrap(),
