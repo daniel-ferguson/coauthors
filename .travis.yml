@@ -6,6 +6,13 @@ rust:
   - stable
   - beta
   - nightly
+before_script:
+  - rustup toolchain install stable
+  - rustup component add rustfmt --toolchain stable
+script:
+  - cargo +stable fmt -- --check
+  - cargo build --verbose
+  - cargo test --verbose
 matrix:
   allow_failures:
     - rust: nightly
