@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/danielferguson0506/coauthors/_apis/build/status/daniel-ferguson.coauthors?branchName=master)](https://dev.azure.com/danielferguson0506/coauthors/_build/latest?definitionId=1&branchName=master)
+
 # Coauthors
 
 A (ridiculously overengineered) git subcommand for managing co-authored-by
