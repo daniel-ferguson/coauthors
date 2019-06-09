@@ -1,5 +1,3 @@
-use clap;
-
 mod author;
 mod cli;
 mod store;
@@ -9,12 +7,8 @@ use std::error::Error;
 use crate::author::Author;
 use crate::store::Store;
 
-fn add(args: &clap::ArgMatches<'_>) -> Result<(), Box<dyn Error>> {
-    let author = Author {
-        alias: args.value_of("ALIAS").unwrap().into(),
-        name: args.value_of("NAME").unwrap().into(),
-        email: args.value_of("EMAIL").unwrap().into(),
-    };
+fn add(alias: String, name: String, email: String) -> Result<(), Box<dyn Error>> {
+    let author = Author { alias, name, email };
 
     let mut store = store::GitConfig::new()?;
 
@@ -52,14 +46,13 @@ fn reset() -> Result<(), Box<dyn Error>> {
     store::GitConfig::new()?.clear()
 }
 
-fn set(args: &clap::ArgMatches<'_>) -> Result<(), Box<dyn Error>> {
+fn set(aliases: Vec<String>) -> Result<(), Box<dyn Error>> {
     let mut store = store::GitConfig::new()?;
 
-    let aliases: Vec<&str> = args.values_of("ALIASES").unwrap().collect();
     let authors: Vec<Author> = store
         .authors()?
         .into_iter()
-        .filter(|a| aliases.contains(&a.alias.as_ref()))
+        .filter(|a| aliases.contains(&a.alias))
         .collect();
 
     store.set(&authors)?;
@@ -68,18 +61,17 @@ fn set(args: &clap::ArgMatches<'_>) -> Result<(), Box<dyn Error>> {
 }
 
 fn main() {
-    let matches = cli::app().get_matches();
+    use cli::{Command, Opt};
+    use structopt::StructOpt;
 
-    let result = match matches.subcommand() {
-        ("add", Some(args)) => add(args),
-        ("ls", Some(_)) => ls(),
-        ("print", Some(_)) => print(),
-        ("reset", Some(_)) => reset(),
-        ("set", Some(args)) => set(args),
-        _ => {
-            println!("{}", matches.usage());
-            Ok(())
-        }
+    let opt = Opt::from_args();
+
+    let result = match opt.cmd {
+        Command::Add { alias, name, email } => add(alias, name, email),
+        Command::Ls => ls(),
+        Command::Print => print(),
+        Command::Reset => reset(),
+        Command::Set { aliases } => set(aliases),
     };
 
     if let Err(e) = result {

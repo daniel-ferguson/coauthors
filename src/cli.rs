@@ -1,26 +1,32 @@
-use clap::{App, Arg, SubCommand};
+use structopt::StructOpt;
 
-pub fn app<'a, 'b>() -> App<'a, 'b> {
-    let add = SubCommand::with_name("add")
-        .about("Add to list of available co-authors")
-        .arg(Arg::with_name("ALIAS").required(true).index(1))
-        .arg(Arg::with_name("NAME").required(true).index(2))
-        .arg(Arg::with_name("EMAIL").required(true).index(3));
-    let ls = SubCommand::with_name("ls").about("Prints available and active co-authors");
-    let print = SubCommand::with_name("print")
-        .about("Format active co-authors for adding to a commit message");
-    let reset = SubCommand::with_name("reset").about("Remove active co-authors");
-    let set = SubCommand::with_name("set")
-        .about("Set active co-authors")
-        .arg(Arg::with_name("ALIASES").required(true).multiple(true));
+#[derive(StructOpt)]
+#[structopt(name = "git-coauthors", about = "A git subcommand for pairing")]
+pub struct Opt {
+    #[structopt(subcommand)]
+    pub cmd: Command,
+}
 
-    App::new("coauthors")
-        .version("0.1")
-        .author("Daniel Ferguson <danielferguson@me.com>")
-        .about("A git wrapper for pairing")
-        .subcommand(add)
-        .subcommand(ls)
-        .subcommand(print)
-        .subcommand(reset)
-        .subcommand(set)
+#[derive(StructOpt)]
+pub enum Command {
+    #[structopt(name = "add", about = "Add to list of available coauthors")]
+    Add {
+        alias: String,
+        name: String,
+        email: String,
+    },
+    #[structopt(name = "ls", about = "Print available and active coauthors")]
+    Ls,
+    #[structopt(
+        name = "print",
+        about = "Format active coauthors for adding to a commit message"
+    )]
+    Print,
+    #[structopt(name = "reset", about = "Remove active coauthors")]
+    Reset,
+    #[structopt(name = "set", about = "Set active coauthors")]
+    Set {
+        #[structopt(name = "aliases")]
+        aliases: Vec<String>,
+    },
 }
