@@ -36,7 +36,7 @@ impl GitConfig {
 impl Store for GitConfig {
     fn add(&mut self, author: &Author) -> StoreResult<()> {
         self.config.set_multivar(
-            "pear.author",
+            "pair.author",
             "^$",
             &format!("{} | {} | {}", author.alias, author.name, author.email),
         )?;
@@ -47,7 +47,7 @@ impl Store for GitConfig {
     fn authors(&self) -> StoreResult<Vec<Author>> {
         let mut out = Vec::new();
 
-        for entry in &self.config.entries(Some("^pear.author$"))? {
+        for entry in &self.config.entries(Some("^pair.author$"))? {
             let entry = entry?;
             if let Some(value) = entry.value() {
                 let author: Author = value.parse()?;
@@ -60,7 +60,7 @@ impl Store for GitConfig {
     fn active(&self) -> StoreResult<Vec<Author>> {
         let mut out = Vec::new();
 
-        for entry in &self.config.entries(Some("^pear.active$"))? {
+        for entry in &self.config.entries(Some("^pair.active$"))? {
             let entry = entry?;
             if let Some(value) = entry.value() {
                 let author: Author = value.parse()?;
@@ -71,7 +71,7 @@ impl Store for GitConfig {
     }
 
     fn clear(&mut self) -> StoreResult<()> {
-        self.config.remove_multivar("pear.active", ".*")?;
+        self.config.remove_multivar("pair.active", ".*")?;
         Ok(())
     }
 
@@ -81,12 +81,12 @@ impl Store for GitConfig {
         }
 
         if !self.active()?.is_empty() {
-            self.config.remove_multivar("pear.active", ".*")?;
+            self.config.remove_multivar("pair.active", ".*")?;
         }
 
         for author in authors {
             self.config.set_multivar(
-                "pear.active",
+                "pair.active",
                 "^$",
                 &format!("{} | {} | {}", author.alias, author.name, author.email),
             )?;
@@ -113,7 +113,7 @@ mod tests {
 
         write!(
             file,
-            r#"[pear]
+            r#"[pair]
           author = gd | Good Dog | good_dog@gmail.com
           author = ic | Ice Cream | cool_cream@hotmail.com
         "#
@@ -144,10 +144,10 @@ mod tests {
         write!(
             file,
             r#"
-[git-pear]
+[git-pair]
   author = gd | Good Dog | good_dog@gmail.com
   author = ic | Ice Cream | cool_cream@hotmail.com
-[pear]
+[pair]
   author = gd | Good Dog | good_dog@gmail.com
   author = ic | Ice Cream | cool_cream@hotmail.com
         "#
@@ -177,7 +177,7 @@ mod tests {
 
         write!(
             file,
-            r#"[pear]
+            r#"[pair]
           author = gd | Good Dog | good_dog@gmail.com
           active = gd | Good Dog | good_dog@gmail.com
         "#
@@ -201,9 +201,9 @@ mod tests {
         write!(
             file,
             r#"
-[git-pear]
+[git-pair]
   active = gd | Good Dog | good_dog@gmail.com
-[pear]
+[pair]
   active = gd | Good Dog | good_dog@gmail.com
         "#
         ).unwrap();
@@ -224,7 +224,7 @@ mod tests {
         write!(
             file,
             r#"
-[pear]
+[pair]
   author = gd | Good Dog | good_dog@gmail.com
   active = gd | Good Dog | good_dog@gmail.com
         "#
@@ -245,10 +245,10 @@ mod tests {
         write!(
             file,
             r#"
-[git-pear]
+[git-pair]
   author = gd | Good Dog | good_dog@gmail.com
   active = gd | Good Dog | good_dog@gmail.com
-[pear]
+[pair]
   author = gd | Good Dog | good_dog@gmail.com
   active = gd | Good Dog | good_dog@gmail.com
         "#
@@ -277,7 +277,7 @@ mod tests {
 
         let file_contents = fs::read_to_string(file.path()).unwrap();
 
-        assert!(file_contents.contains("[pear]"));
+        assert!(file_contents.contains("[pair]"));
         assert!(file_contents.contains("author = gd | Good Dog | good_dog@gmail.com"));
     }
 
@@ -288,9 +288,9 @@ mod tests {
         write!(
             file,
             r#"
-[git-pear]
+[git-pair]
   author = gd | Good Dog | good_dog@gmail.com
-[pear]
+[pair]
   author = gd | Good Dog | good_dog@gmail.com
         "#
         ).unwrap();
