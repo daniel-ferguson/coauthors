@@ -117,7 +117,8 @@ mod tests {
           author = gd | Good Dog | good_dog@gmail.com
           author = ic | Ice Cream | cool_cream@hotmail.com
         "#
-        ).unwrap();
+        )
+        .unwrap();
 
         assert_eq!(
             store.authors().unwrap(),
@@ -151,7 +152,8 @@ mod tests {
   author = gd | Good Dog | good_dog@gmail.com
   author = ic | Ice Cream | cool_cream@hotmail.com
         "#
-        ).unwrap();
+        )
+        .unwrap();
 
         assert_eq!(
             store.authors().unwrap(),
@@ -181,7 +183,8 @@ mod tests {
           author = gd | Good Dog | good_dog@gmail.com
           active = gd | Good Dog | good_dog@gmail.com
         "#
-        ).unwrap();
+        )
+        .unwrap();
 
         assert_eq!(
             store.active().unwrap(),
@@ -206,7 +209,8 @@ mod tests {
 [pair]
   active = gd | Good Dog | good_dog@gmail.com
         "#
-        ).unwrap();
+        )
+        .unwrap();
 
         assert_eq!(
             store.active().unwrap(),
@@ -228,7 +232,8 @@ mod tests {
   author = gd | Good Dog | good_dog@gmail.com
   active = gd | Good Dog | good_dog@gmail.com
         "#
-        ).unwrap();
+        )
+        .unwrap();
 
         let mut store = GitConfig::with_config_path(file.path()).unwrap();
 
@@ -252,7 +257,8 @@ mod tests {
   author = gd | Good Dog | good_dog@gmail.com
   active = gd | Good Dog | good_dog@gmail.com
         "#
-        ).unwrap();
+        )
+        .unwrap();
 
         let mut store = GitConfig::with_config_path(file.path()).unwrap();
 
@@ -273,7 +279,8 @@ mod tests {
                 alias: "gd".into(),
                 name: "Good Dog".into(),
                 email: "good_dog@gmail.com".into(),
-            }).unwrap();
+            })
+            .unwrap();
 
         let file_contents = fs::read_to_string(file.path()).unwrap();
 
@@ -293,7 +300,8 @@ mod tests {
 [pair]
   author = gd | Good Dog | good_dog@gmail.com
         "#
-        ).unwrap();
+        )
+        .unwrap();
 
         let mut store = GitConfig::with_config_path(file.path()).unwrap();
 
@@ -302,7 +310,8 @@ mod tests {
                 alias: "gd".into(),
                 name: "Good Dog".into(),
                 email: "good_dog@gmail.com".into(),
-            }]).unwrap();
+            }])
+            .unwrap();
 
         let file_contents = fs::read_to_string(file.path()).unwrap();
 
