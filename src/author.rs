@@ -2,6 +2,8 @@ use std::error;
 use std::fmt;
 use std::str::FromStr;
 
+use lazy_static::lazy_static;
+
 use regex::Regex;
 
 #[derive(Debug, PartialEq)]
@@ -15,7 +17,7 @@ pub struct Author {
 pub struct ParseError;
 
 impl fmt::Display for ParseError {
-    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, fmt: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(fmt, "Parse Error")
     }
 }
@@ -42,7 +44,7 @@ impl<'a> FromStr for Author {
 }
 
 impl fmt::Display for Author {
-    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, fmt: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(fmt, "[{}] {} <{}>", self.alias, self.name, self.email)
     }
 }

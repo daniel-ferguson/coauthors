@@ -4,7 +4,7 @@ use std::error::Error;
 #[cfg(test)]
 use std::path::Path;
 
-use author::Author;
+use crate::author::Author;
 
 type StoreResult<T> = Result<T, Box<dyn Error>>;
 
@@ -117,7 +117,7 @@ mod tests {
           author = gd | Good Dog | good_dog@gmail.com
           author = ic | Ice Cream | cool_cream@hotmail.com
         "#
-        );
+        ).unwrap();
 
         assert_eq!(
             store.authors().unwrap(),
@@ -147,7 +147,7 @@ mod tests {
           author = gd | Good Dog | good_dog@gmail.com
           active = gd | Good Dog | good_dog@gmail.com
         "#
-        );
+        ).unwrap();
 
         assert_eq!(
             store.active().unwrap(),
@@ -169,7 +169,7 @@ mod tests {
   author = gd | Good Dog | good_dog@gmail.com
   active = gd | Good Dog | good_dog@gmail.com
         "#
-        );
+        ).unwrap();
 
         let mut store = GitConfig::with_config_path(file.path()).unwrap();
 
@@ -208,7 +208,7 @@ mod tests {
 [pear]
   author = gd | Good Dog | good_dog@gmail.com
         "#
-        );
+        ).unwrap();
 
         let mut store = GitConfig::with_config_path(file.path()).unwrap();
 

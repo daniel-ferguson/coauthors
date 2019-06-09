@@ -1,9 +1,4 @@
-extern crate clap;
-extern crate git2;
-#[macro_use]
-extern crate lazy_static;
-extern crate regex;
-extern crate tempfile;
+use clap;
 
 mod author;
 mod cli;
@@ -11,10 +6,10 @@ mod store;
 
 use std::error::Error;
 
-use author::Author;
-use store::Store;
+use crate::author::Author;
+use crate::store::Store;
 
-fn add(args: &clap::ArgMatches) -> Result<(), Box<dyn Error>> {
+fn add(args: &clap::ArgMatches<'_>) -> Result<(), Box<dyn Error>> {
     let author = Author {
         alias: args.value_of("ALIAS").unwrap().into(),
         name: args.value_of("NAME").unwrap().into(),
@@ -57,7 +52,7 @@ fn reset() -> Result<(), Box<dyn Error>> {
     store::GitConfig::new()?.clear()
 }
 
-fn set(args: &clap::ArgMatches) -> Result<(), Box<dyn Error>> {
+fn set(args: &clap::ArgMatches<'_>) -> Result<(), Box<dyn Error>> {
     let mut store = store::GitConfig::new()?;
 
     let aliases: Vec<&str> = args.values_of("ALIASES").unwrap().collect();

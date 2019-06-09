@@ -3,6 +3,7 @@ name = "coauthors"
 version = "0.1.0"
 authors = ["Daniel Ferguson <danielferguson@me.com>"]
 license = "MIT"
+edition = "2018"
 
 [[bin]]
 name = "git-coauthors"
