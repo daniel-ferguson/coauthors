@@ -47,7 +47,7 @@ impl Store for GitConfig {
     fn authors(&self) -> StoreResult<Vec<Author>> {
         let mut out = Vec::new();
 
-        for entry in &self.config.entries(Some("pear.author"))? {
+        for entry in &self.config.entries(Some("^pear.author$"))? {
             let entry = entry?;
             if let Some(value) = entry.value() {
                 let author: Author = value.parse()?;
@@ -60,7 +60,7 @@ impl Store for GitConfig {
     fn active(&self) -> StoreResult<Vec<Author>> {
         let mut out = Vec::new();
 
-        for entry in &self.config.entries(Some("pear.active"))? {
+        for entry in &self.config.entries(Some("^pear.active$"))? {
             let entry = entry?;
             if let Some(value) = entry.value() {
                 let author: Author = value.parse()?;
@@ -137,6 +137,40 @@ mod tests {
     }
 
     #[test]
+    fn authors_no_overeager_matching() {
+        let mut file = NamedTempFile::new().unwrap();
+        let store = GitConfig::with_config_path(file.path()).unwrap();
+
+        write!(
+            file,
+            r#"
+[git-pear]
+  author = gd | Good Dog | good_dog@gmail.com
+  author = ic | Ice Cream | cool_cream@hotmail.com
+[pear]
+  author = gd | Good Dog | good_dog@gmail.com
+  author = ic | Ice Cream | cool_cream@hotmail.com
+        "#
+        ).unwrap();
+
+        assert_eq!(
+            store.authors().unwrap(),
+            vec![
+                Author {
+                    alias: "gd".into(),
+                    name: "Good Dog".into(),
+                    email: "good_dog@gmail.com".into()
+                },
+                Author {
+                    alias: "ic".into(),
+                    name: "Ice Cream".into(),
+                    email: "cool_cream@hotmail.com".into()
+                }
+            ]
+        );
+    }
+
+    #[test]
     fn active() {
         let mut file = NamedTempFile::new().unwrap();
         let store = GitConfig::with_config_path(file.path()).unwrap();
@@ -146,6 +180,31 @@ mod tests {
             r#"[pear]
           author = gd | Good Dog | good_dog@gmail.com
           active = gd | Good Dog | good_dog@gmail.com
+        "#
+        ).unwrap();
+
+        assert_eq!(
+            store.active().unwrap(),
+            vec![Author {
+                alias: "gd".into(),
+                name: "Good Dog".into(),
+                email: "good_dog@gmail.com".into()
+            }]
+        );
+    }
+
+    #[test]
+    fn active_no_overeager_matching() {
+        let mut file = NamedTempFile::new().unwrap();
+        let store = GitConfig::with_config_path(file.path()).unwrap();
+
+        write!(
+            file,
+            r#"
+[git-pear]
+  active = gd | Good Dog | good_dog@gmail.com
+[pear]
+  active = gd | Good Dog | good_dog@gmail.com
         "#
         ).unwrap();
 
@@ -181,6 +240,30 @@ mod tests {
     }
 
     #[test]
+    fn clear_no_overeager_matching() {
+        let mut file = NamedTempFile::new().unwrap();
+        write!(
+            file,
+            r#"
+[git-pear]
+  author = gd | Good Dog | good_dog@gmail.com
+  active = gd | Good Dog | good_dog@gmail.com
+[pear]
+  author = gd | Good Dog | good_dog@gmail.com
+  active = gd | Good Dog | good_dog@gmail.com
+        "#
+        ).unwrap();
+
+        let mut store = GitConfig::with_config_path(file.path()).unwrap();
+
+        store.clear().unwrap();
+
+        let file_contents = fs::read_to_string(file.path()).unwrap();
+
+        assert!(file_contents.contains("active"));
+    }
+
+    #[test]
     fn add() {
         let file = NamedTempFile::new().unwrap();
         let mut store = GitConfig::with_config_path(file.path()).unwrap();
@@ -205,6 +288,8 @@ mod tests {
         write!(
             file,
             r#"
+[git-pear]
+  author = gd | Good Dog | good_dog@gmail.com
 [pear]
   author = gd | Good Dog | good_dog@gmail.com
         "#
